@@ -1,0 +1,222 @@
+@import 'node_modules/mathsass/dist/math';
+
+// 钱标识￥
+@mixin ￥($size: 12px, $color: $goods-price-color) {
+  &:before {
+    content: '￥';
+    color: $color;
+    font-size: $size;
+  }
+}
+
+// 钱单位 元
+@mixin yuan($size: 12px, $color: $goods-price-color) {
+  &:after {
+    content: '元';
+    color: $color;
+    font-size: $size;
+  }
+}
+
+// 线性渐变
+@mixin linear-gradient($deg, $color, $color1) {
+  background: linear-gradient($deg, $color 0%, $color1 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType = 0, startColorstr = #{$color}, endColorstr = #{$color1});
+}
+
+// 文字渐变
+@mixin text-gradient($color, $attr, $color1, $direction) {
+  position: relative;
+  color: $color;
+  &:before {
+    content: attr($attr);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    color: $color1;
+    mask: linear-gradient(to $direction, red, transparent);
+  }
+}
+
+// opacity
+@mixin opacity($i) {
+  filter: alpha(opacity=($i * 100));
+  opacity: $i;
+}
+
+// 三角形
+@mixin triangle($direction, $size, $color) {
+  content: '';
+  height: 0;
+  width: 0;
+  //三角向上、向下、向右和向左时，设置边框样式
+  @if ($direction == up) or ($direction == down) or ($direction == right) or ($direction == left) {
+    border: ($size / 2) solid transparent;
+    //三角向上时，底部边框颜色为$color
+    @if $direction == up {
+      border-bottom-color: $color;
+      //三角向右时，左边边框颜色为$color
+    } @else if $direction == right {
+      border-left-color: $color;
+      //三你向下时，顶部边框颜色为$color
+    } @else if $direction == down {
+      border-top-color: $color;
+      //三角向左时，右边框颜色为$color
+    } @else if $direction == left {
+      border-right-color: $color;
+    }
+  }
+  //当三角为左上、右上直角三角形时
+  @else if ($direction == up-right) or ($direction == up-left) {
+    border-top: $size solid $color;
+    //顶边边框样式
+    //当三角为右上直角三角形时，设置左边边框为透明
+    @if $direction == up-right {
+      border-left: $size solid transparent;
+      //当三角为左上直角三角形时，设置右边边框为透明
+    } @else if $direction == up-left {
+      border-right: $size solid transparent;
+    }
+  }
+  //当三角为右下、左下直角三角形时
+  @else if ($direction == down-right) or ($direction == down-left) {
+    border-bottom: $size solid $color;
+    //底边边框样式
+    //当三角为右下直角三角形时，设置左边边框为透明
+    @if $direction == down-right {
+      border-left: $size solid transparent;
+      //当三你为左下直角三角形时，设置右边边框为透明
+    } @else if $direction == down-left {
+      border-right: $size solid transparent;
+    }
+  }
+}
+
+// 线条
+@mixin line($width, $height, $color) {
+  content: '';
+  width: $width;
+  height: $height;
+  background-color: $color;
+}
+
+// 旋转
+@mixin rotate($size) {
+  transform: rotate($size);
+  filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11 = #{cos($size)}, M12 = #{0 - sin($size)}, M21 = #{sin($size)}, M22 = #{cos($size)});
+}
+
+// 省略号
+@mixin ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  word-wrap: normal;
+  text-overflow: ellipsis;
+}
+
+// 设置背景颜色
+@mixin bgColor($bgColor, $color: #666) {
+  background-color: $bgColor;
+  @if $bgColor == #fff {
+    color: $color;
+  }
+}
+
+// 清除浮动
+@mixin clearfix {
+  *zoom: 1;
+  &:after {
+    content: '200B';
+    height: 0;
+    font-size: 0;
+    display: block;
+    clear: both;
+  }
+}
+
+// 图片动画
+@mixin animate-scale {
+  &:hover img {
+    transform: scale(1.1);
+  }
+  img {
+    transition: all 0.2s ease-out;
+  }
+}
+
+@mixin animate-opacity {
+  &:hover img {
+    @include opacity(0.8);
+  }
+  img {
+    transition: all 0.2s ease-out;
+  }
+}
+
+// 广告图动画
+@mixin adv-animate {
+  a {
+    overflow: hidden;
+    &:before {
+      content: '';
+      position: absolute;
+      width: 70px;
+      height: 100%;
+      top: 0;
+      left: 20px;
+      @include opacity(0);
+      background: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        color-stop(0%, rgba(255, 255, 255, 0)),
+        color-stop(50%, rgba(255, 255, 255, 0.2)),
+        color-stop(100%, rgba(255, 255, 255, 0))
+      );
+      background: -webkit-linear-gradient(
+        left,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      background: -o-linear-gradient(
+        left,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: skewX(-25deg);
+      overflow: hidden;
+    }
+    &:hover:before {
+      @include opacity(1);
+      left: 130%;
+      transition: all 0.45s ease-out;
+    }
+  }
+}
+
+@function black($opacity) {
+  @return rgba(0, 0, 0, $opacity);
+}
+
+@function white($opacity) {
+  @return rgba(255, 255, 255, $opacity);
+}
+
+@mixin goods-pic($width, $height) {
+  width: $width;
+  height: $height;
+  position: relative;
+  .goods-pic {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -($height / 2);
+    margin-left: -($width / 2);
+    transition: all ease-out 0.2s;
+  }
+}
